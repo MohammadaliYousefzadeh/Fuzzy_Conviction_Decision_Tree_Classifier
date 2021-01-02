@@ -108,7 +108,7 @@ def cal_conviction_rate(model, x_train, x_test, y_test, features, fuzzy_nearly_o
 
     return df_temp
 
-def visualize_tree(dot_data, name, model_path):
+def render_tree(dot_data, name=None, model_path=None):
     min_width = 1
     max_width = 20
 
@@ -149,7 +149,10 @@ def visualize_tree(dot_data, name, model_path):
         new_lines.append(line)
 
     graph = graphviz.Source('\n'.join(new_lines), name, model_path, format='png')
-    graph.render(name, model_path, format='png')
+    if model_path is None and name is None: 
+        graph.render(name, model_path, format='png')
+    
+    return graph
 
 def plot_score_conviction_rate(df_temp, path):
     plt.figure(figsize=(10,15))
