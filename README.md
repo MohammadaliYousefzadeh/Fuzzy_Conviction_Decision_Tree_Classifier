@@ -42,13 +42,13 @@ The results show that using conviction rate along with probabilty can increase R
 ### Breast Cancer Wisconsin (Original) Data Set
 
 <p align="center">
-    <img src="results/original/score_decision_tree_d2_diagnostic.png" alt="Image"/>
+    <img src="results/original/roc_decision_tree_d2_original.png" alt="Image"/>
 </p>
 
 ### Breast Cancer Wisconsin (Diagnostic) Data Set
 
 <p align="center">
-    <img src="results/diagnostic/score_decision_tree_d2_diagnostic.png" alt="Image"/>
+    <img src="results/diagnostic/roc_decision_tree_d2_diagnostic.png" alt="Image"/>
 </p>
 
 ## Authors
