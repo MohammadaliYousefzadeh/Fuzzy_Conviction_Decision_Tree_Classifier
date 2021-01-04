@@ -148,9 +148,9 @@ def render_tree(dot_data, name=None, model_path=None):
 
         new_lines.append(line)
 
-    graph = graphviz.Source('\n'.join(new_lines), name, model_path, format='png')
-    if model_path is None and name is None: 
-        graph.render(name, model_path, format='png')
+    graph = graphviz.Source('\n'.join(new_lines))
+    if model_path is not None and name is not None: 
+        graph.render(name, model_path, cleanup=True, format='png')
     
     return graph
 
