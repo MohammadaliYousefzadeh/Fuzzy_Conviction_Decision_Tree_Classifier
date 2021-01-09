@@ -1,13 +1,3 @@
-<style>
-div.container {
-  display: inline-block;
-}
-
-#left {
-  clip-path: inset(66px 700px 30px 10px);
-}
-</style>
-
 # Fuzzy Conviction Decision Tree Classifier
 Contained herewith are codes used in the implementation of the paper [Fuzzy Conviction Score for Discriminating Decision-Tree-Classified Feature Vectors w.r.t. Relative Distances from Decision Boundaries](https://www.researchgate.net/publication/347974343_Fuzzy_Conviction_Score_for_Discriminating_Decision-Tree-Classified_Feature_Vectors_wrt_Relative_Distances_from_Decision_Boundaries_with_Demonstration_on_Benchmark_Breast_Cancer_Data_Sets).
 > <b>Abstract -</b> We augment decision tree classification analysis with fuzzy membership functions that quantitatively qualify, at each binary decision boundary, the degree of "conviction" to which each data point (i.e. feature vector) is deemed to be on either side of said decision boundary, the further away from the decision threshold, relative to peers, the higher the fuzzy membership value (i.e. the closer to 1). Our fuzzy "conviction" score is analogous to the measure of "confidence" as per traditional statistical methods, whilst handily accommodates the nonlinear discriminant surface created by a decision tree. Although our method has been successfully deployed in confidential commercial setting, here we demonstrate the concept and computation on the benchmark "Breast Cancer Wisconsin (Original/Diagnostic)" Data Sets archived and made available publicly on the UCI (University of California, Irvine) Machine Learning Repository. In addition, we will as well demonstrate that without introducing any additional learning loops, our fuzzification of decision tree classifier improves the AUC (Area Under the ROC (Receiver Operating Characteristic) Curve) performance over that of the original decision tree classifier, provided the latter is decently capable of discriminating classes within the relevant data set to begin with.
@@ -51,41 +41,69 @@ Here we depict trained decision tree classifiers as directed graphs, where the s
 <b>Breast Cancer Wisconsin (Original) Data Set</b> Figure 1 reveals 3 decision tree leafs associated with positive (malignant) prediction, the biggest majority as well as highest positive probability of which were identified as having "uniformity_of_cell_size" > 3.5 and "marginal_adhesion" > 1.5. The discriminatory power (figure 2) is very good, without-sample/test AUC of 0.98.
 <br/>
 
-<div>
-	<p align="center">
-		<figure class="container">
-			<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/decision_tree_d2_original.png" />
-			<figcaption>Figure 1: Decision Tree Classifier - trained on 70% Breast Cancer Wisconsin (Original) Data Set</figcaption>
-		</figure>
-	</p>
-</div>
-
-<div class="container">
-	<p align="center">
-		<figure>
-			<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/roc_decision_tree_d2_original.png" />
-			<figcaption>Figure 2: Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Original) Data Set</figcaption>
-		</figure>
-	</p>
-</div>
-
-Decision Tree Classifier with Fuzzy Conviction Score Overlay
-
-We used ROC as a measurement to compare the results from Traditional Decision Tree Classifier and Fuzzified Decision Tree Classifier and especially for Fuzzified Decision Tree Classifier, instead of using predicted probabilty alone
-as a cut-off threshold to calculate true positive rate and false positive rate, we combined probabilty and conviction rate as a cut-off threshold.
-
-The results show that using conviction rate along with probabilty can increase ROC.
-
-### Breast Cancer Wisconsin (Original) Data Set
-
 <p align="center">
-    <img src="results/original/roc_decision_tree_d2_original.png" alt="Image"/>
+	<figure class="container">
+		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/decision_tree_d2_original.png" />
+		<figcaption>Figure 1: Decision Tree Classifier - trained on 70% Breast Cancer Wisconsin (Original) Data Set</figcaption>
+	</figure>
 </p>
 
-### Breast Cancer Wisconsin (Diagnostic) Data Set
+<p align="center">
+	<figure>
+		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/roc_traditional_decision_tree_d2_original.png" />
+		<figcaption>Figure 2: Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Original) Data Set</figcaption>
+	</figure>
+</p>
+
+<b>Breast Cancer Wisconsin (Diagnostic) Data Set</b> Figure 3 reveals 2 decision tree leafs associated with positive (malignant) prediction, the greater number as well as higher positive probability of which were identified as having "feature_8" and "feature_23" greater than their respective threshold values. The discriminatory power (figure 4) is very good, with out-sample/test AUC of 0.93.
 
 <p align="center">
-    <img src="results/diagnostic/roc_decision_tree_d2_diagnostic.png" alt="Image"/>
+	<figure class="container">
+		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/decision_tree_d2_diagnostic.png" />
+		<figcaption>Figure 3: Decision Tree Classifier - trained on 70% Breast Cancer Wisconsin (Diagnostic) Data Set</figcaption>
+	</figure>
+</p>
+
+<p align="center">
+	<figure>
+		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/roc_traditional_decision_tree_d2_diagnostic.png" />
+		<figcaption>Figure 4: Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Diagnostic) Data Set</figcaption>
+	</figure>
+</p>
+
+### Decision Tree Classifier with Fuzzy Conviction Score Overlay
+
+<b>Breast Cancer Wisconsin (Original) Data Set</b> Figure 5 reveals that by overlaying the original decision tree classifier with fuzzy conviction score, the discriminatory power improves from AUC = 0.98 to AUC = 0.99, an improvement achieved without introducing any additional learning loops. The improvement in discriminatory power can be further examined by plotting (figure 6) both probability estimate of a standard decision tree classifier (to the left) and fuzzy conviction score (to the right) for each data point, "blue" for actual positive test cases, and "red" for actual negative test cases, where for the same value of probability estimate as per standard decision tree classifier, "blue" appear more frequently amongst higher fuzzy conviction scores, while "red" appear more frequently amongst lower fuzzy conviction scores.
+<br/><br/>
+<b>Breast Cancer Wisconsin (Diagnostic) Data Set</b> Figure 7 reveals that by overlaying the original decision tree classifier with fuzzy conviction score, the discriminatory power improves from AUC = 0.93 to AUC = 0.98. See also the probability estimate vs. fuzzy conviction score plot (figure 8).
+<br/>
+
+<p align="center">
+	<figure class="container">
+		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/roc_fuzzified_decision_tree_d2_original.png" />
+		<figcaption>Figure 5: Fuzzified Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Original) Data Set</figcaption>
+	</figure>
+</p>
+
+<p align="center">
+	<figure>
+		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/score_decision_tree_d2_original.png" />
+		<figcaption>Figure 6: Probability Estimate (left) vs. Fuzzy Conviction Score (right); "blue" for positive, "red" for negative cases</figcaption>
+	</figure>
+</p>
+
+<p align="center">
+	<figure class="container">
+		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/roc_fuzzifier_decision_tree_d2_diagnostic.png" />
+		<figcaption>Figure 7: Fuzzified Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Diagnostic) Data Set</figcaption>
+	</figure>
+</p>
+
+<p align="center">
+	<figure>
+		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/score_decision_tree_d2_diagnostic.png" />
+		<figcaption>Figure 8: Probability Estimate (left) vs. Fuzzy Conviction Score (right); "blue" for positive, "red" for negative cases</figcaption>
+	</figure>
 </p>
 
 ## Authors
