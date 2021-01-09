@@ -43,14 +43,14 @@ Here we depict trained decision tree classifiers as directed graphs, where the s
 
 <p align="center">
 	<figure class="container">
-		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/decision_tree_d2_original.png" />
+		<img src="results/original/decision_tree_d2_original.png" />
 		<figcaption>Figure 1: Decision Tree Classifier - trained on 70% Breast Cancer Wisconsin (Original) Data Set</figcaption>
 	</figure>
 </p>
 
 <p align="center">
 	<figure>
-		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/roc_traditional_decision_tree_d2_original.png" />
+		<img src="results/original/roc_traditional_decision_tree_d2_original.png" />
 		<figcaption>Figure 2: Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Original) Data Set</figcaption>
 	</figure>
 </p>
@@ -59,14 +59,14 @@ Here we depict trained decision tree classifiers as directed graphs, where the s
 
 <p align="center">
 	<figure class="container">
-		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/decision_tree_d2_diagnostic.png" />
+		<img src="results/diagnostic/decision_tree_d2_diagnostic.png" />
 		<figcaption>Figure 3: Decision Tree Classifier - trained on 70% Breast Cancer Wisconsin (Diagnostic) Data Set</figcaption>
 	</figure>
 </p>
 
 <p align="center">
 	<figure>
-		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/roc_traditional_decision_tree_d2_diagnostic.png" />
+		<img src="results/diagnostic/roc_traditional_decision_tree_d2_diagnostic.png" />
 		<figcaption>Figure 4: Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Diagnostic) Data Set</figcaption>
 	</figure>
 </p>
@@ -80,28 +80,28 @@ Here we depict trained decision tree classifiers as directed graphs, where the s
 
 <p align="center">
 	<figure class="container">
-		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/roc_fuzzified_decision_tree_d2_original.png" />
+		<img src="results/original/roc_fuzzified_decision_tree_d2_original.png" />
 		<figcaption>Figure 5: Fuzzified Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Original) Data Set</figcaption>
 	</figure>
 </p>
 
 <p align="center">
 	<figure>
-		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/original/score_decision_tree_d2_original.png" />
+		<img src="results/original/score_decision_tree_d2_original.png" />
 		<figcaption>Figure 6: Probability Estimate (left) vs. Fuzzy Conviction Score (right); "blue" for positive, "red" for negative cases</figcaption>
 	</figure>
 </p>
 
 <p align="center">
 	<figure class="container">
-		<img src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/roc_fuzzifier_decision_tree_d2_diagnostic.png" />
+		<img src="results/diagnostic/roc_fuzzifier_decision_tree_d2_diagnostic.png" />
 		<figcaption>Figure 7: Fuzzified Decision Tree Classifier’s ROC - tested on 30% Breast Cancer Wisconsin (Diagnostic) Data Set</figcaption>
 	</figure>
 </p>
 
 <p align="center">
 	<figure>
-		<img id="left" src="Fuzzy_Conviction_Decision_Tree_Classifier/results/diagnostic/score_decision_tree_d2_diagnostic.png" />
+		<img src="results/diagnostic/score_decision_tree_d2_diagnostic.png" />
 		<figcaption>Figure 8: Probability Estimate (left) vs. Fuzzy Conviction Score (right); "blue" for positive, "red" for negative cases</figcaption>
 	</figure>
 </p>
