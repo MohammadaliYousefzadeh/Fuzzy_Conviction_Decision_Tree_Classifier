@@ -20,7 +20,7 @@ To make the project runable without path error, the structure of the folders mus
 │   │   └── ......
 │   └── original
 │       └── ......
-├── README.md
+├── environment.yml
 ├── model_development_breast_cancer_wisconsin.ipynb
 └── README.md
 ```
@@ -29,6 +29,8 @@ To make the project runable without path error, the structure of the folders mus
 
 Please follow these instructions to set the project up and run on your computer.
 
+0. Install [Anaconda](https://www.anaconda.com/) [optional]
+1. After downloading the project, go to the project path and run conda env create -f environment.yml using Anaconda Prompt to create an environment.
 1. Download two datasets, `breast-cancer-wisconsin.data` and `wdbc.data` from [Breast Cancer Wisconsin Data Set](https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/) and put them into `datasets`.
 2. Now run all blocks in `model_development_breast_cancer_wisconsin.ipynb`
 3. The results will be stored in `results` seperately with sub folders named `original` for Breast Cancer Wisconsin (Original) Data Set and `diagnostic` for Breast Cancer Wisconsin (Diagnostic) Data Set.
