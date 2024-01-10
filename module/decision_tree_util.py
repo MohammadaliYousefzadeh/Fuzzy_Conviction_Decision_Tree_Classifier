@@ -179,12 +179,12 @@ def plot_score_conviction_rate(df_temp, path):
     tick_lab = ['1.0', '0.5', '0.0', '0.5', '1.0']
     tick_val = [-1, -.5, 0, .5, 1]
 
-    colors = np.where(df_temp['Target'], 'b', 'r')[::-1]
+    colors = np.where(df_temp['Target'], 'r', 'g')[::-1]
     plt.barh(x, -df_temp['prob'].values[::-1], alpha=.75, height=1, align='center' , color=colors)
     plt.barh(x, df_temp['leaf_fuzzy_value'].values[::-1], alpha=.75, height=1, align='center', color=colors)
     plt.plot(np.zeros(x.shape[0]), x, color='w')
     # plt.yticks(x, x)
     plt.xticks(tick_val, tick_lab)
     plt.grid(b=False)
-    # plt.title("Population Pyramid")
+    plt.title("Population Pyramid")
     plt.savefig(path)
