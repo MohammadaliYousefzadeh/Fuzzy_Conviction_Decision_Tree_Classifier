@@ -1,2 +1,2 @@
-Data set can be downloaded from here.
-https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/
+Data set can be imported directly from Kaggle.
+!kaggle datasets download -d utkarshx27/breast-cancer-wisconsin-diagnostic-dataset
