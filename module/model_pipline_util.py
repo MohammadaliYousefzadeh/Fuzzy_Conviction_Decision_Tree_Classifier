@@ -12,7 +12,9 @@ import pickle as pkl
 import time
 import warnings
 import gc
+# ------------------------------------------------------------------------------------------------------------------
 
+# Balances a binary dataset by oversampling the minority class until it reaches a specified ratio.
 def oversampling(data, target_column, pos_ratio=.5):
     pos = data[data[target_column] == 1]
     neg = data[data[target_column] == 0]
@@ -24,7 +26,9 @@ def oversampling(data, target_column, pos_ratio=.5):
     data       = pd.concat([pos]*repeated_n+[neg])
     
     return data
+# ------------------------------------------------------------------------------------------------------------------
 
+# Determines the module name of an object, which is useful for understanding what kind of model or library is being used.
 def get_obj_type(obj):
     if type(obj).__name__ == 'ABCMeta':
         return obj.__module__.split('.')[0]
@@ -34,7 +38,10 @@ def get_obj_type(obj):
         return obj.__module__.split('.')[0]
     else:
         return type(obj).__module__.split('.')[0]
-    
+# ------------------------------------------------------------------------------------------------------------------
+
+# Trains a model based on the type of model function (model_fn) passed.
+# It supports different libraries and handles the instantiation and fitting of models accordingly.
 def train(model_fn, param, x_train, y_train):
     base_module = get_obj_type(model_fn)
 #     if base_module == 'builtins':
@@ -53,7 +60,10 @@ def train(model_fn, param, x_train, y_train):
         raise Exception('No implementation for {} yet.'.format(base_module))
         
     return model
+# ------------------------------------------------------------------------------------------------------------------
 
+# Makes predictions using the trained model.
+# It checks the model's library type and calls the appropriate prediction method. It supports classification and regression modes.
 def predict(model, data, mode):
     base_module = get_obj_type(model)
 #     if base_module == 'builtins':
@@ -79,12 +89,15 @@ def predict(model, data, mode):
         raise Exception('No implementation for {} yet.'.format(base_module))
         
     return y_pred
+# ------------------------------------------------------------------------------------------------------------------
 
+# Evaluates a model based on the specified mode (classification or regression) and calculates various performance metrics.
+# It can evaluate on train, validation, and test sets if provided.
 def evaluation(model, mode, x_train, y_train, x_val=None, y_val=None, x_test=None, y_test=None):
     matric = {}
     base_module = get_obj_type(model)
     
-    # train
+    # Train
     y_score = predict(model, x_train, mode)
     if base_module not in ['xgboost', 'builtins']:
         y_score = y_score[: ,1]
@@ -113,7 +126,7 @@ def evaluation(model, mode, x_train, y_train, x_val=None, y_val=None, x_test=Non
         matric['train_r2']   = train_r2
     
     
-    # validation
+    # Validation
     if x_val is not None and y_val is not None:
         y_score = predict(model, x_val, mode)
         if base_module not in ['xgboost', 'builtins']:
@@ -142,7 +155,7 @@ def evaluation(model, mode, x_train, y_train, x_val=None, y_val=None, x_test=Non
             matric['val_max']  = val_max
             matric['val_r2']   = val_r2
     
-    # test
+    # Test
     if x_test is not None and y_test is not None:
         y_score = predict(model, x_test, mode)
         if base_module not in ['xgboost', 'builtins']:
@@ -172,7 +185,9 @@ def evaluation(model, mode, x_train, y_train, x_val=None, y_val=None, x_test=Non
             matric['test_r2']   = test_r2
     
     return matric
+# ------------------------------------------------------------------------------------------------------------------
 
+# Saves the trained model to a file. The serialization format depends on the model's library type.
 def save(model, path, model_name):
     base_module = get_obj_type(model)
     if base_module == 'sklearn':
@@ -184,7 +199,9 @@ def save(model, path, model_name):
         model.save_model(path + model_name + '.txt')
     else:
         raise Exception('No implementation for {} yet.'.format(base_module))
+ # ------------------------------------------------------------------------------------------------------------------
 
+# Loads a model from a file. It supports different formats based on the model's library type.
 def load(path, base_module):
     if base_module == 'sklearn':
         with open(path, 'rb') as f:
@@ -198,7 +215,9 @@ def load(path, base_module):
         raise Exception('No implementation for {} yet.'.format(base_module))
         
     return model
+# ------------------------------------------------------------------------------------------------------------------
 
+# Creates a lift chart, which is a type of plot that is often used to evaluate the performance of binary classification models.
 def plot_lift_chart(y_pred, y_actual, mode, name, show_last_bin=False):
     df = pd.DataFrame({'y_predict':y_pred, 'y':y_actual})
     df = df.sort_values('y_predict').reset_index(drop=True)
@@ -237,7 +256,10 @@ def plot_lift_chart(y_pred, y_actual, mode, name, show_last_bin=False):
     if show_last_bin:
         print('Example of the last bin')
         display(df.loc[df['bin'] == 9, ['y', 'y_predict']].sort_values('y'))
+# ------------------------------------------------------------------------------------------------------------------
 
+# Plots the Receiver Operating Characteristic (ROC) curve,
+# which is a graphical representation of the diagnostic ability of a binary classifier.
 def show_roc_curve(y_test, y_score, ax=None):
     if ax is None:
         fig, ax = plt.subplots()
@@ -257,7 +279,9 @@ def show_roc_curve(y_test, y_score, ax=None):
     ax.legend(loc="lower right")
     if ax is None:
         plt.show()
+# ------------------------------------------------------------------------------------------------------------------
 
+# Calculates the ROC curve based on the data and specific criteria columns.
 def cal_roc_curve(df, target_col, criteria_cols):
     df_temp = df.copy()
 
@@ -279,7 +303,9 @@ def cal_roc_curve(df, target_col, criteria_cols):
     tpr = np.array([0] + df_criteria['true_positive_rate'].tolist())
 
     return fpr, tpr, df_criteria.reset_index(drop=True)[criteria_cols]
-    
+ # ------------------------------------------------------------------------------------------------------------------
+
+# Plots the ROC curve given arrays of false positive rates (FPR) and true positive rates (TPR).
 def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
     if ax is None:
         fig, ax = plt.subplots()
@@ -301,7 +327,9 @@ def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
     ax.legend(loc="lower right")
     if ax is None:
         plt.show()
-        
+# ------------------------------------------------------------------------------------------------------------------
+
+# Displays a confusion matrix as a heatmap, normalizing the values for better comparison. It uses matplotlib's matshow.
 def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix', ax=None):
     if ax is None:
         fig, ax = plt.subplots()
@@ -331,7 +359,9 @@ def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matr
     plt.colorbar(mat)
     if ax is None:
         plt.show()
+# ------------------------------------------------------------------------------------------------------------------
 
+# Orchestrates the training and evaluation of a model, including timing these processes and saving the trained model.
 def train_and_evaluate_model(name, model_fn, param, mode, save_path, 
                              x_train, y_train, x_val=None, y_val=None,
                              x_test=None, y_test=None):
@@ -355,7 +385,10 @@ def train_and_evaluate_model(name, model_fn, param, mode, save_path,
     result['saving_time']     = saving_time
     
     return model, result
-        
+ # ------------------------------------------------------------------------------------------------------------------
+
+# Runs experiments with different models, saving the results and printing out performance metrics.
+# It also handles cleaning up with garbage collection.
 def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=None, 
                    x_test=None, y_test=None, label_name=None):
     datasets = ['train']
@@ -429,7 +462,9 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
         del model, y_pred, y_score
 
         gc.collect()
+# ------------------------------------------------------------------------------------------------------------------
 
+# Prints out performance metrics in a formatted manner for easy comparison.
 def show_measurement_matrices(df_matrics, matric_cols, show_validation=False, show_test=False):
     print('Train')
     print(' '*10, ' '.join([v.ljust(18, ' ') for v in df_matrics['name']]))
@@ -453,7 +488,9 @@ def show_measurement_matrices(df_matrics, matric_cols, show_validation=False, sh
 
         for col in matric_cols:
             print(col.ljust(10, ' '), ' '.join(['{:.2f}'.format(v).ljust(18, ' ') for v in df_matrics['test_'+col]]))  
+# ------------------------------------------------------------------------------------------------------------------
 
+# Plots ROC curves for multiple predictions against the actual values.
 def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 13))
@@ -471,7 +508,9 @@ def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
     ax.set_ylabel('True Positive Rate')
     ax.set_title('ROC')
     ax.legend(loc="lower right")
+# ------------------------------------------------------------------------------------------------------------------
 
+# Plots a confusion matrix for a set of predictions against the actual values, with the option of normalization.
 def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 13))
@@ -499,3 +538,46 @@ def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None
         ax.text(j, i, '{:,.0f}'.format(z),c='w' if z > y_actual.shape[0]/2 else 'k', ha='center', va='center')
 
     ax.set_title(alias, pad=5)
+# ------------------------------------------------------------------------------------------------------------------
+
+# From the duty of the code in the overall project context,
+# it is evident that the code is designed to handle several critical aspects of a machine learning pipeline, particularly for classification tasks.
+# Here's a summary of the roles it plays in the project:
+
+# Data Preprocessing
+# Oversampling: Balances the classes in the dataset, which is crucial for models that are sensitive to class imbalance.
+
+# Model Compatibility
+# Library Agnostic: Handles models from different libraries (scikit-learn, XGBoost, LightGBM) seamlessly, suggesting a framework that is designed for comparative model evaluation.
+
+# Model Training and Prediction
+# Training: Abstracts the training process, allowing for different types of machine learning algorithms to be trained with their respective parameters.
+# Prediction: Abstracts the prediction process, catering to the outputs of different models, whether they are probability estimates or direct predictions.
+
+# Model Evaluation
+# Evaluation Metrics: Calculates a comprehensive set of evaluation metrics to assess model performance.
+# This includes accuracy, precision, recall, F1 score, RMSE, and R2 score for classifiers and regressors.
+# ROC and AUC: Provides functions to compute and plot ROC curves and calculate the AUC,
+# which are standard tools for evaluating the performance of classification models.
+# Confusion Matrix: Visualizes prediction results in a confusion matrix, aiding in the interpretability of model performance, especially for classification problems.
+
+# Model Serialization
+# Saving and Loading: Serializes models to files and loads them back, which is essential for deploying trained models or for making predictions without retraining.
+
+# Visualization
+# Lift Chart: Presents a visualization that is particularly useful in marketing analytics for assessing the performance of binary classifiers.
+# ROC Curve: Offers insights into the trade-offs between true positive rate and false positive rate at various threshold settings.
+# Confusion Matrix Plot: Helps in understanding the true versus predicted classifications in a normalized manner.
+
+# Experiment Management
+# Experimentation Framework: Runs multiple models, captures their performance, and organizes the results, which is indicative of a larger experimental framework for model comparison.
+# Performance Reporting: Prints and visualizes model performance metrics in a structured manner, facilitating easy comparison and interpretation of results.
+
+# Overall Project Role
+# The code appears to be part of a broader machine learning experiment or project aimed at developing, comparing, and evaluating machine learning models.
+# It likely serves as the backbone for a systematic approach to model selection, where multiple models are trained, evaluated,
+# and compared to determine which model performs best for the given dataset and problem.
+# The structure suggests a focus on reproducibility and automation, which are key for scalable and robust machine learning workflows.
+# In summary, this code reflects a comprehensive approach to machine learning model development and evaluation,
+# emphasizing flexibility across different machine learning libraries, methodical evaluation, and clear presentation of results.
+# The inclusion of functions for oversampling and evaluation metrics indicates an application that might involve imbalanced datasets and a need for thorough model performance analysis
