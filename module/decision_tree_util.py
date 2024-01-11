@@ -4,12 +4,19 @@ from functools import partial
 import matplotlib.pyplot as plt
 import graphviz
 from sklearn.tree import _tree
+# -----------------------------------------------------------------------------------------------------
 
+# Defines a sigmoid function, a common function in machine learning for mapping values to a range between 0 and 1.
+# It's modified here with additional parameters: theta, fuzzy_nearly_one, and anchor_point.
+# These parameters adjust the function to compute fuzzy membership values.
 def sigmoid(x, theta, fuzzy_nearly_one, anchor_point):
     tau_zero = 1/np.log(fuzzy_nearly_one/(1 - fuzzy_nearly_one)) 
     tau = (anchor_point-theta) * tau_zero
     return 1 / (1 + np.exp(-(x-theta)/tau))
+# -----------------------------------------------------------------------------------------------------    
 
+# This function finds the parent of each node in a decision tree. It traverses the tree and stores the parent-child relationships.
+# This information is useful for understanding the path that data takes through the tree.
 def find_parent(tree):
     tree_ = tree.tree_ 
     parents = [() for _ in range(tree_.node_count)]
@@ -30,7 +37,10 @@ def find_parent(tree):
     parents = traverse(0, parents, [])
         
     return parents
+# -----------------------------------------------------------------------------------------------------
 
+# Calculates fuzzy membership functions for each node in the decision tree.
+# The function iterates through the tree nodes, applying the sigmoid function to compute the fuzzy membership for the passed and failed conditions at each node based on the dataset x.
 def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
     tree_ = tree.tree_
     passed_fuzzy_membership_fns = [lambda x: np.nan for _ in range(tree_.node_count)]
@@ -65,7 +75,11 @@ def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
         return passed_fns, failed_fns
 
     return recurse(0, passed_fuzzy_membership_fns, failed_fuzzy_membership_fns, x)
+# -----------------------------------------------------------------------------------------------------
 
+# Calculates the conviction rate for each data point in the test dataset.
+# It uses the find_parent and cal_fuzzy_membership_fn functions to compute fuzzy memberships and then applies these to the test data.
+# It adds several new columns to a dataframe, including fuzzy values and probabilities for each node.
 def cal_conviction_rate(model, x_train, x_test, y_test, features, fuzzy_nearly_one, pivot_threshold):
     traversed_path = find_parent(model)
     passed_fuzzy_membership_fns, failed_fuzzy_membership_fns = cal_fuzzy_membership_fn(model, x_train, fuzzy_nearly_one)
@@ -107,7 +121,10 @@ def cal_conviction_rate(model, x_train, x_test, y_test, features, fuzzy_nearly_o
     df_temp = pd.concat([df_upper, df_lower]).reset_index(drop=True)
 
     return df_temp
+# -----------------------------------------------------------------------------------------------------
 
+# This function visualizes the decision tree. It uses Graphviz to create a graphical representation of the tree,
+# adjusting the width of the arrows based on the number of samples that pass through each node.
 def render_tree(dot_data, name=None, model_path=None):
     min_width = 1
     max_width = 20
@@ -153,7 +170,10 @@ def render_tree(dot_data, name=None, model_path=None):
         graph.render(name, model_path, cleanup=True, format='png')
     
     return graph
+# -----------------------------------------------------------------------------------------------------
 
+# Plots the conviction rate against the model's score.
+# It creates a horizontal bar plot where the length and color of each bar represent the conviction rate and the classification result, respectively.
 def plot_score_conviction_rate(df_temp, path):
     plt.figure(figsize=(10,15))
 
@@ -188,3 +208,12 @@ def plot_score_conviction_rate(df_temp, path):
     plt.grid(b=False)
     plt.title("Population Pyramid")
     plt.savefig(path)
+# -----------------------------------------------------------------------------------------------------
+
+# Summary
+# The code is designed to augment a decision tree classifier with fuzzy logic.
+# It calculates fuzzy membership degrees and conviction rates, which can be used to enhance the tree's decision-making process.
+# This approach could potentially improve the classifier's ability to distinguish between classes, especially in cases with uncertainty or overlap between classes.
+# Visualization functions (render_tree and plot_score_conviction_rate) are provided for interpreting the model's structure and the results of the fuzzy enhancement.
+# This is an advanced application and requires a good understanding of both decision trees and fuzzy logic.
+# The code is highly specific and seems tailored for a particular dataset or type of problem.
