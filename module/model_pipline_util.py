@@ -306,9 +306,8 @@ def cal_roc_curve(df, target_col, criteria_cols):
  # ------------------------------------------------------------------------------------------------------------------
 
 # Plots the ROC curve given arrays of false positive rates (FPR) and true positive rates (TPR).
-def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
-    if ax is None:
-        fig, ax = plt.subplots()
+def show_roc_curve_from_fpr_tpr(fpr, tpr, title=None):
+    fig, ax = plt.subplots()  # Create a single figure
 
     roc_auc     = auc(fpr, tpr)
 
@@ -325,8 +324,33 @@ def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
     else:
         ax.set_title('ROC')
     ax.legend(loc="lower right")
-    if ax is None:
-        plt.show()
+    plt.show()  # Display the figure
+
+# Usage example
+show_roc_curve_from_fpr_tpr(fpr, tpr, title='ROC Curve')
+
+
+# def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
+#     if ax is None:
+#         fig, ax = plt.subplots()
+
+#     roc_auc     = auc(fpr, tpr)
+
+#     lw = 2
+#     ax.plot(fpr, tpr, color='darkorange',
+#              lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+#     ax.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+#     ax.set_xlim([0.0, 1.0])
+#     ax.set_ylim([0.0, 1.05])
+#     ax.set_xlabel('False Positive Rate')
+#     ax.set_ylabel('True Positive Rate')
+#     if title is not None:
+#         ax.set_title(title)
+#     else:
+#         ax.set_title('ROC')
+#     ax.legend(loc="lower right")
+#     if ax is None:
+#         plt.show()
 # ------------------------------------------------------------------------------------------------------------------
 
 # Displays a confusion matrix as a heatmap, normalizing the values for better comparison. It uses matplotlib's matshow.
@@ -458,28 +482,41 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
                 y_score = y_score[: ,1]
             y_pred  = (y_score > .5).astype(int)
 
+            
             if mode == 'classifier':
-                fig, axs = plt.subplots(figsize=(15,5), ncols=2)
-                show_roc_curve(y_test, y_score, ax=axs[0])
-                show_confusion_matrix(y_test, y_pred, label_name, ax=axs[1])
-                plt.show()
+                fig1 = plt.figure(figsize=(10, 10))
+                show_roc_curve(y_test, y_score)
+                plt.show()  # Show the first figure
+    
+                fig2 = plt.figure(figsize=(10, 10))
+                show_confusion_matrix(y_test, y_pred, label_name)
+                plt.show()  # Show the second figure
             plot_lift_chart(y_score, y_test, mode, name)
+        
         elif x_val is not None:
             y_score = predict(model, x_val, mode)
             if base_module not in ['xgboost', 'builtins']:
                 y_score = y_score[: ,1]
             y_pred  = (y_score > .5).astype(int)
 
+            
             if mode == 'classifier':
-                fig, axs = plt.subplots(figsize=(15,5), ncols=2)
-                show_roc_curve(y_val, y_score, ax=axs[0])
-                show_confusion_matrix(y_val, y_pred, label_name, ax=axs[1])
-                plt.show()
+                fig1 = plt.figure(figsize=(15, 5))
+                show_roc_curve(y_val, y_score)
+                plt.show()  # Show the first figure
+    
+                fig2 = plt.figure(figsize=(15, 5))
+                show_confusion_matrix(y_val, y_pred, label_name)
+                plt.show()  # Show the second figure
             plot_lift_chart(y_score, y_val, mode, name)
 
+            
         del model, y_pred, y_score
 
         gc.collect()
+
+
+
 # ------------------------------------------------------------------------------------------------------------------
 
 # Prints out performance metrics in a formatted manner for easy comparison.
@@ -509,9 +546,8 @@ def show_measurement_matrices(df_matrics, matric_cols, show_validation=False, sh
 # ------------------------------------------------------------------------------------------------------------------
 
 # Plots ROC curves for multiple predictions against the actual values.
-def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
-    if ax is None:
-        fig, ax = plt.subplots(figsize=(20, 13))
+def plot_roc(df_predictions, y_actual_col='y_actual'):
+    fig, ax = plt.subplots(figsize=(20, 13))  # Create a single figure
 
     for alias in df_predictions.columns[df_predictions.columns != y_actual_col]:
         fpr, tpr, _ = roc_curve(df_predictions[y_actual_col], df_predictions[alias])
@@ -526,6 +562,28 @@ def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
     ax.set_ylabel('True Positive Rate')
     ax.set_title('ROC')
     ax.legend(loc="lower right")
+
+# Usage example
+plot_roc(df_predictions, y_actual_col='y_actual')
+plt.show()  # Display the figure
+
+# def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
+#     if ax is None:
+#         fig, ax = plt.subplots(figsize=(20, 13))
+
+#     for alias in df_predictions.columns[df_predictions.columns != y_actual_col]:
+#         fpr, tpr, _ = roc_curve(df_predictions[y_actual_col], df_predictions[alias])
+#         roc_auc     = auc(fpr, tpr)
+
+#         lw = 2
+#         ax.plot(fpr, tpr, lw=lw, label='{} ROC curve (area = {:0.2f})'.format(alias, roc_auc))
+#     ax.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+#     ax.set_xlim([0.0, 1.0])
+#     ax.set_ylim([0.0, 1.05])
+#     ax.set_xlabel('False Positive Rate')
+#     ax.set_ylabel('True Positive Rate')
+#     ax.set_title('ROC')
+#     ax.legend(loc="lower right")
 # ------------------------------------------------------------------------------------------------------------------
 
 # Plots a confusion matrix for a set of predictions against the actual values, with the option of normalization.
