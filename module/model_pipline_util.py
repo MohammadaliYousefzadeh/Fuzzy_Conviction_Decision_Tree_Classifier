@@ -529,33 +529,56 @@ def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
 # ------------------------------------------------------------------------------------------------------------------
 
 # Plots a confusion matrix for a set of predictions against the actual values, with the option of normalization.
+
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
+
 def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(20, 13))
         
     cm = confusion_matrix(y_actual, y_predict)
-#     cm = cm/np.sum(cm, axis=1)[:,None]
-#     cm = cm/df_predictions.shape[0]
+    cm = cm / np.sum(cm, axis=1)[:, None]
 
-    mat = ax.matshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    mat.set_clim(0, np.max(cm))
-    ax.set_xticks(range(len(labels)))
-    ax.set_yticks(range(len(labels)))
-    ax.set_xticklabels(labels)
-    ax.xaxis.set_ticks_position('bottom')
-    ax.set_yticklabels(labels)
-    ax.set_xlabel('Predicted label')
-    ax.set_ylabel('True label')
-    ax.tick_params(axis='x', which='both', bottom=False, top=False)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    disp.plot(cmap='coolwarm', values_format=".0f", ax=ax)  # Use 'coolwarm' colormap and format values as integers
 
-    ax.grid(b=False, which='major', axis='both')
-    ax.xaxis.set_minor_locator(MultipleLocator(0.5))
-    ax.yaxis.set_minor_locator(MultipleLocator(0.5))
-    ax.grid(b=True, which='minor', axis='both', lw=2, color='white')
-    for (i, j), z in np.ndenumerate(cm):
-        ax.text(j, i, '{:,.0f}'.format(z),c='w' if z > y_actual.shape[0]/2 else 'k', ha='center', va='center')
+    disp.ax_.set_xlabel('Predicted label')
+    disp.ax_.set_ylabel('True label')
+    disp.ax_.set_title(alias, pad=5)
+    plt.colorbar(disp.im_, ax=disp.ax_)
 
-    ax.set_title(alias, pad=5)
+# Usage example
+plot_confusion_matrix(y_actual, y_predict, alias='Confusion Matrix', labels=['0', '1'])
+
+
+
+# def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None):
+#     if ax is None:
+#         fig, ax = plt.subplots(figsize=(20, 13))
+        
+#     cm = confusion_matrix(y_actual, y_predict)
+# #     cm = cm/np.sum(cm, axis=1)[:,None]
+# #     cm = cm/df_predictions.shape[0]
+
+#     mat = ax.matshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+#     mat.set_clim(0, np.max(cm))
+#     ax.set_xticks(range(len(labels)))
+#     ax.set_yticks(range(len(labels)))
+#     ax.set_xticklabels(labels)
+#     ax.xaxis.set_ticks_position('bottom')
+#     ax.set_yticklabels(labels)
+#     ax.set_xlabel('Predicted label')
+#     ax.set_ylabel('True label')
+#     ax.tick_params(axis='x', which='both', bottom=False, top=False)
+
+#     ax.grid(b=False, which='major', axis='both')
+#     ax.xaxis.set_minor_locator(MultipleLocator(0.5))
+#     ax.yaxis.set_minor_locator(MultipleLocator(0.5))
+#     ax.grid(b=True, which='minor', axis='both', lw=2, color='white')
+#     for (i, j), z in np.ndenumerate(cm):
+#         ax.text(j, i, '{:,.0f}'.format(z),c='w' if z > y_actual.shape[0]/2 else 'k', ha='center', va='center')
+
+#     ax.set_title(alias, pad=5)
 # ------------------------------------------------------------------------------------------------------------------
 
 # From the duty of the code in the overall project context,
