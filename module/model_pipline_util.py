@@ -276,6 +276,13 @@ def show_roc_curve(y_test, y_score, ax=None):
     ax.set_xlabel('False Positive Rate')
     ax.set_ylabel('True Positive Rate')
     ax.set_title('ROC')
+
+    # Highlight the axes lines
+    ax.spines['top'].set_visible(True)
+    ax.spines['right'].set_visible(True)
+    ax.spines['bottom'].set_linewidth(1.5)
+    ax.spines['left'].set_linewidth(1.5)
+    
     ax.legend(loc="lower right")
     if ax is None:
         plt.show()
