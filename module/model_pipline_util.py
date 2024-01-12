@@ -222,14 +222,14 @@ def plot_lift_chart(y_pred, y_actual, mode, name, show_last_bin=False):
     df = pd.DataFrame({'y_predict':y_pred, 'y':y_actual})
     df = df.sort_values('y_predict').reset_index(drop=True)
 
-    bins      = 10
+    bins      = 5
     bin_size  = df.shape[0] // bins
     remainder = df.shape[0] % bins
 
     df['bin'] = df.index // bin_size
     df.loc[df['bin'] == bins, 'bin'] = bins-1
     
-    fig, axs = plt.subplots(ncols=2, figsize=(15,5), sharey=True)
+    fig, axs = plt.subplots(ncols=2, figsize=(15,8), sharey=True)
     if mode == 'classifier':
         df.groupby('bin')['y'].sum().plot.bar(ax=axs[0])
     else:
@@ -478,16 +478,15 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
                 y_score = y_score[: ,1]
             y_pred  = (y_score > .5).astype(int)
 
-            
             if mode == 'classifier':
-                fig1 = plt.figure(figsize=(10, 10))
+                fig1 = plt.figure(figsize=(10, 12))
                 show_roc_curve(y_test, y_score)
                 plt.show()  # Show the first figure
     
-                fig2 = plt.figure(figsize=(10, 10))
+                fig2 = plt.figure(figsize=(10, 12))
                 show_confusion_matrix(y_test, y_pred, label_name)
                 plt.show()  # Show the second figure
-            plot_lift_chart(y_score, y_test, mode, name)
+            #plot_lift_chart(y_score, y_test, mode, name)
         
         elif x_val is not None:
             y_score = predict(model, x_val, mode)
@@ -495,21 +494,104 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
                 y_score = y_score[: ,1]
             y_pred  = (y_score > .5).astype(int)
 
-            
             if mode == 'classifier':
-                fig1 = plt.figure(figsize=(15, 5))
+                fig1 = plt.figure(figsize=(10, 12))
                 show_roc_curve(y_val, y_score)
                 plt.show()  # Show the first figure
     
-                fig2 = plt.figure(figsize=(15, 5))
+                fig2 = plt.figure(figsize=(10, 12))
                 show_confusion_matrix(y_val, y_pred, label_name)
                 plt.show()  # Show the second figure
-            plot_lift_chart(y_score, y_val, mode, name)
+            #plot_lift_chart(y_score, y_val, mode, name)
+
+        # Delete the model and intermediate data to free memory
+        del model, y_pred, y_score
+        gc.collect()
+
+# def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=None, 
+#                    x_test=None, y_test=None, label_name=None):
+#     datasets = ['train']
+#     if x_val is not None and y_val is not None:
+#         datasets += ['val']
+#     if x_test is not None and y_test is not None:
+#         datasets += ['test']
+        
+#     if mode == 'classifier':
+#         matrics = ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
+#     else:
+#         matrics = ['rmse', 'mae', 'max', 'r2']
+
+#     columns  = ['name']
+#     columns += [dataset+'_'+matric for dataset in datasets for matric in matrics]
+#     columns += ['training_time', 'evaluation_time', 'saving_time']
+#     results = pd.DataFrame(columns=columns)
+    
+#     for name, item in models.items():
+#         print(name)
+#         model_fn, param = item
+#         model, result = train_and_evaluate_model(name, model_fn, param, 'classifier', save_path, 
+#                                                  x_train, y_train, x_val, y_val, x_test, y_test)
+
+#         df_result = pd.DataFrame({k:[v] for k, v in result.items()})
+#         df_result[columns].to_csv('{}model_result_{}.csv'.format(save_path, name), index=False)
+
+#         results = pd.concat(df_result)
+        
+#         if mode == 'classifier':
+#             print(' '*10, '\t'.join(datasets))
+#             metrics = ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
+#             for metric in metrics:
+#                 print(metric.ljust(10, ' '), 
+#                       '\t'.join(['{:.4f}'.format(df_result.loc[0, '{}_{}'.format(col, metric)]) for col in datasets]))
+
+#             print('training time'.ljust(15, ' '), '{:.5f} s'.format(df_result.loc[0, 'training_time']))
+#             print('evaluation time'.ljust(15, ' '), '{:.5f} s'.format(df_result.loc[0, 'evaluation_time']))
+#             print('saving time'.ljust(15, ' '), '{:.5f} s'.format(df_result.loc[0, 'saving_time']))
+# #             df_result.loc[0, '']
+#         else:
+#             display(df_result)
+
+#         base_module = get_obj_type(model)
+#         if label_name is None:
+#             label_name = [0, 1]
+#         if x_test is not None:
+#             y_score = predict(model, x_test, mode)
+#             if base_module not in ['xgboost', 'builtins']:
+#                 y_score = y_score[: ,1]
+#             y_pred  = (y_score > .5).astype(int)
 
             
-        del model, y_pred, y_score
+#             if mode == 'classifier':
+#                 fig1 = plt.figure(figsize=(10, 12))
+#                 show_roc_curve(y_test, y_score)
+#                 plt.show()  # Show the first figure
+    
+#                 fig2 = plt.figure(figsize=(10, 12))
+#                 show_confusion_matrix(y_test, y_pred, label_name)
+#                 plt.show()  # Show the second figure
+#             #plot_lift_chart(y_score, y_test, mode, name)
+        
+#         elif x_val is not None:
+#             y_score = predict(model, x_val, mode)
+#             if base_module not in ['xgboost', 'builtins']:
+#                 y_score = y_score[: ,1]
+#             y_pred  = (y_score > .5).astype(int)
 
-        gc.collect()
+            
+#             if mode == 'classifier':
+#                 fig1 = plt.figure(figsize=(10,12 ))
+#                 show_roc_curve(y_val, y_score)
+#                 plt.show()  # Show the first figure
+    
+#                 fig2 = plt.figure(figsize=(10, 12))
+#                 show_confusion_matrix(y_val, y_pred, label_name)
+#                 plt.show()  # Show the second figure
+#             #plot_lift_chart(y_score, y_val, mode, name)
+
+            
+#         del model, y_pred, y_score
+
+#         gc.collect()
 # ------------------------------------------------------------------------------------------------------------------
 
 # Prints out performance metrics in a formatted manner for easy comparison.
@@ -576,7 +658,6 @@ def plot_roc(df_predictions, y_actual_col='y_actual'):
 # ------------------------------------------------------------------------------------------------------------------
 
 # Plots a confusion matrix for a set of predictions against the actual values, with the option of normalization.
-
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 
 def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None):
