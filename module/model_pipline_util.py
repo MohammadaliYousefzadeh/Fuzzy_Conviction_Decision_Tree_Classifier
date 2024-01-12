@@ -330,35 +330,53 @@ def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
 # ------------------------------------------------------------------------------------------------------------------
 
 # Displays a confusion matrix as a heatmap, normalizing the values for better comparison. It uses matplotlib's matshow.
-def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix', ax=None):
-    if ax is None:
-        fig, ax = plt.subplots()
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 
+def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion Matrix'):
     cm = confusion_matrix(y_actual, y_pred)
-    cm = cm/np.sum(cm, axis=1)[:,None]
+    cm = cm / np.sum(cm, axis=1)[:, None]
 
-    mat = ax.matshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    mat.set_clim(0, np.max(cm))
-    ax.set_xticks(range(len(labels)))
-    ax.set_yticks(range(len(labels)))
-    ax.set_xticklabels(labels)
-    ax.xaxis.set_ticks_position('bottom')
-    ax.set_yticklabels(labels)
-    ax.set_xlabel('Predicted label')
-    ax.set_ylabel('True label')
-    ax.tick_params(axis='x', which='both', bottom=False, top=False)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    disp.plot(cmap='coolwarm', values_format=".2f")  # Use 'coolwarm' colormap
 
-    ax.grid(b=False, which='major', axis='both')
-    ax.xaxis.set_minor_locator(MultipleLocator(0.5))
-    ax.yaxis.set_minor_locator(MultipleLocator(0.5))
-    ax.grid(b=True, which='minor', axis='both', lw=2, color='white')
-    for (i, j), z in np.ndenumerate(cm):
-        ax.text(j, i, '{:0.2f}'.format(z),c='w' if z > .5 else 'k', ha='center', va='center')
+    disp.ax_.set_xlabel('Predicted label')
+    disp.ax_.set_ylabel('True label')
+    disp.ax_.set_title(title, pad=20)
+    plt.colorbar(disp.im_, ax=disp.ax_)
+    plt.show()
+# Usage example
+show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix')
 
-    ax.set_title(title, pad=20)
-    plt.colorbar(mat)
-    if ax is None:
-        plt.show()
+
+# def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix', ax=None):
+#     if ax is None:
+#         fig, ax = plt.subplots()
+
+#     cm = confusion_matrix(y_actual, y_pred)
+#     cm = cm/np.sum(cm, axis=1)[:,None]
+
+#     mat = ax.matshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+#     mat.set_clim(0, np.max(cm))
+#     ax.set_xticks(range(len(labels)))
+#     ax.set_yticks(range(len(labels)))
+#     ax.set_xticklabels(labels)
+#     ax.xaxis.set_ticks_position('bottom')
+#     ax.set_yticklabels(labels)
+#     ax.set_xlabel('Predicted label')
+#     ax.set_ylabel('True label')
+#     ax.tick_params(axis='x', which='both', bottom=False, top=False)
+
+#     ax.grid(b=False, which='major', axis='both')
+#     ax.xaxis.set_minor_locator(MultipleLocator(0.5))
+#     ax.yaxis.set_minor_locator(MultipleLocator(0.5))
+#     ax.grid(b=True, which='minor', axis='both', lw=2, color='white')
+#     for (i, j), z in np.ndenumerate(cm):
+#         ax.text(j, i, '{:0.2f}'.format(z),c='w' if z > .5 else 'k', ha='center', va='center')
+
+#     ax.set_title(title, pad=20)
+#     plt.colorbar(mat)
+#     if ax is None:
+#         plt.show()
 # ------------------------------------------------------------------------------------------------------------------
 
 # Orchestrates the training and evaluation of a model, including timing these processes and saving the trained model.
