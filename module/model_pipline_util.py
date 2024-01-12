@@ -326,9 +326,6 @@ def show_roc_curve_from_fpr_tpr(fpr, tpr, title=None):
     ax.legend(loc="lower right")
     plt.show()  # Display the figure
 
-# Usage example
-show_roc_curve_from_fpr_tpr(fpr, tpr, title='ROC Curve')
-
 
 # def show_roc_curve_from_fpr_tpr(fpr, tpr, ax=None, title=None):
 #     if ax is None:
@@ -368,9 +365,7 @@ def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion Matr
     disp.ax_.set_title(title, pad=20)
     plt.colorbar(disp.im_, ax=disp.ax_)
     plt.show()
-# Usage example
-    show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix')
-
+    
 
 # def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix', ax=None):
 #     if ax is None:
@@ -514,9 +509,6 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
         del model, y_pred, y_score
 
         gc.collect()
-
-
-
 # ------------------------------------------------------------------------------------------------------------------
 
 # Prints out performance metrics in a formatted manner for easy comparison.
@@ -563,10 +555,6 @@ def plot_roc(df_predictions, y_actual_col='y_actual'):
     ax.set_title('ROC')
     ax.legend(loc="lower right")
 
-# Usage example
-plot_roc(df_predictions, y_actual_col='y_actual')
-plt.show()  # Display the figure
-
 # def plot_roc(df_predictions, y_actual_col='y_actual', ax=None):
 #     if ax is None:
 #         fig, ax = plt.subplots(figsize=(20, 13))
@@ -604,10 +592,6 @@ def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None
     disp.ax_.set_ylabel('True label')
     disp.ax_.set_title(alias, pad=5)
     plt.colorbar(disp.im_, ax=disp.ax_)
-
-# Usage example
-    plot_confusion_matrix(y_actual, y_predict, alias='Confusion Matrix', labels=['0', '1'])
-
 
 
 # def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None):
