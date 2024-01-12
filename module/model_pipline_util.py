@@ -358,7 +358,7 @@ def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion Matr
     cm = cm / np.sum(cm, axis=1)[:, None]
 
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-    disp.plot(cmap='coolwarm', values_format=".2f")  # Use 'coolwarm' colormap
+    disp.plot(cmap='viridis', values_format=".2f")  # Use 'coolwarm' colormap
 
     disp.ax_.set_xlabel('Predicted label')
     disp.ax_.set_ylabel('True label')
@@ -453,7 +453,8 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
         df_result = pd.DataFrame({k:[v] for k, v in result.items()})
         df_result[columns].to_csv('{}model_result_{}.csv'.format(save_path, name), index=False)
 
-        results.append(df_result)
+        results = pd.concat(df_result)
+        
         if mode == 'classifier':
             print(' '*10, '\t'.join(datasets))
             metrics = ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
@@ -586,7 +587,7 @@ def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None
     cm = cm / np.sum(cm, axis=1)[:, None]
 
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-    disp.plot(cmap='coolwarm', values_format=".0f", ax=ax)  # Use 'coolwarm' colormap and format values as integers
+    disp.plot(cmap='viridis', values_format=".0f", ax=ax)  # Use 'coolwarm' colormap and format values as integers
 
     disp.ax_.set_xlabel('Predicted label')
     disp.ax_.set_ylabel('True label')
