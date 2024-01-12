@@ -453,7 +453,7 @@ def run_experiment(models, save_path, mode, x_train, y_train, x_val=None, y_val=
         df_result = pd.DataFrame({k:[v] for k, v in result.items()})
         df_result[columns].to_csv('{}model_result_{}.csv'.format(save_path, name), index=False)
 
-        results = pd.concat(df_result)
+        results = pd.concat([df_result])
         
         if mode == 'classifier':
             print(' '*10, '\t'.join(datasets))
