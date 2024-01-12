@@ -345,7 +345,7 @@ def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion Matr
     plt.colorbar(disp.im_, ax=disp.ax_)
     plt.show()
 # Usage example
-show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix')
+    show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix')
 
 
 # def show_confusion_matrix(y_actual, y_pred, labels=[0, 1], title='Confusion matrix', ax=None):
@@ -548,7 +548,7 @@ def plot_confusion_matrix(y_actual, y_predict, alias, labels=['0', '1'], ax=None
     plt.colorbar(disp.im_, ax=disp.ax_)
 
 # Usage example
-plot_confusion_matrix(y_actual, y_predict, alias='Confusion Matrix', labels=['0', '1'])
+    plot_confusion_matrix(y_actual, y_predict, alias='Confusion Matrix', labels=['0', '1'])
 
 
 
