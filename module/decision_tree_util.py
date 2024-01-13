@@ -49,8 +49,12 @@ def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
     def recurse(node, passed_fns, failed_fns, x):
         if tree_.feature[node] != _tree.TREE_UNDEFINED:
             threshold = tree_.threshold[node]
+            
             print(f"Node {node}: Threshold = {threshold}")
-
+            print('tree_.feature[node]',tree_.feature[node])
+            print('x[:, tree_.feature[node]',x[:, tree_.feature[node])
+            print('x[x[:, tree_.feature[node]]',x[x[:, tree_.feature[node]])
+            
             passed_x = x[x[:, tree_.feature[node]] <= threshold]
             failed_x = x[x[:, tree_.feature[node]] > threshold]
             print(f"Node {node}: Passed samples = {len(passed_x)}, Failed samples = {len(failed_x)}")
