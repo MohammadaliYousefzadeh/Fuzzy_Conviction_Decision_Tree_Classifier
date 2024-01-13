@@ -52,8 +52,8 @@ def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
         if tree_.feature[node] != _tree.TREE_UNDEFINED:
             threshold = tree_.threshold[node]
             
-            passed_x = x.iloc[x.iloc[:, tree_.feature[node]] <= threshold]
-            failed_x = x.iloc[x.iloc[:, tree_.feature[node]] > threshold]
+            passed_x = x[x.iloc[:, tree_.feature[node]] <= threshold]
+            failed_x = x[x.iloc[:, tree_.feature[node]] > threshold]
             if passed_x.shape[0] > 1:
                 mean = passed_x[:, tree_.feature[node]].mean()
                 params = {'theta': threshold, 'fuzzy_nearly_one': fuzzy_nearly_one, 
