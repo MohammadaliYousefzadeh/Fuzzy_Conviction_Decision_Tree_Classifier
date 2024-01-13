@@ -43,17 +43,17 @@ def find_parent(tree):
 # The function iterates through the tree nodes, applying the sigmoid function to compute the fuzzy membership for the passed and failed conditions at each node based on the dataset x.
 
 def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
+    x = x.reset_index(drop=True)
     tree_ = tree.tree_
     passed_fuzzy_membership_fns = [lambda x: np.nan for _ in range(tree_.node_count)]
     failed_fuzzy_membership_fns = [lambda x: np.nan for _ in range(tree_.node_count)]
 
     def recurse(node, passed_fns, failed_fns, x):
-        x = x.reset_index(drop=True)
         if tree_.feature[node] != _tree.TREE_UNDEFINED:
             threshold = tree_.threshold[node]
             
-            passed_x = x[x.iloc[:, tree_.feature[node]] <= threshold]
-            failed_x = x[x.iloc[:, tree_.feature[node]] > threshold]
+            passed_x = x.loc[x.iloc[:, tree_.feature[node]] <= threshold]
+            failed_x = x.loc[x.iloc[:, tree_.feature[node]] > threshold]
             if passed_x.shape[0] > 1:
                 mean = passed_x[:, tree_.feature[node]].mean()
                 params = {'theta': threshold, 'fuzzy_nearly_one': fuzzy_nearly_one, 
