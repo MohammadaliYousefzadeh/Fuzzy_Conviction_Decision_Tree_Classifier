@@ -52,8 +52,8 @@ def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
             
             print(f"Node {node}: Threshold = {threshold}")
             print('tree_.feature[node]',tree_.feature[node])
-            print('x[:, tree_.feature[node]',x[:, tree_.feature[node])
-            print('x[x[:, tree_.feature[node]]',x[x[:, tree_.feature[node]])
+            print('x[:, tree_.feature[node]',x[:, tree_.feature[node]])
+            print('x[x[:, tree_.feature[node]]',x[x[:, tree_.feature[node]]<= threshold])
             
             passed_x = x[x[:, tree_.feature[node]] <= threshold]
             failed_x = x[x[:, tree_.feature[node]] > threshold]
