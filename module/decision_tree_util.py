@@ -99,7 +99,7 @@ def cal_conviction_rate(model, x_train, x_test, y_test, features, fuzzy_nearly_o
             if is_pass_condition >= 0:
                 df_temp['fm_{}'.format(i)] *= df_temp['fv_{}_{}'.format(parent_node, is_pass_condition)]
 
-    temp = model.tree_.decision_path(x_test.astype(np.float32))
+    temp = model.tree_.decision_path(x_test.values.astype(np.float32))
     decision_path = temp.toarray()
 
     leaves = [i for i, path in enumerate(traversed_path) if (-1, -1) in path]
