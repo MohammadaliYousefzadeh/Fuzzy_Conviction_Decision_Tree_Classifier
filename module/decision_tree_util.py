@@ -207,7 +207,7 @@ def plot_score_conviction_rate(df_temp, path):
     plt.plot(np.zeros(x.shape[0]), x, color='w')
     # plt.yticks(x, x)
     plt.xticks(tick_val, tick_lab)
-    plt.grid(b=False)
+    plt.grid(visible=False,b=False)
     plt.title("Population Pyramid")
     plt.savefig(path)
 # -----------------------------------------------------------------------------------------------------
