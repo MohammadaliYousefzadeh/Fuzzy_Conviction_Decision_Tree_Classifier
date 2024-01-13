@@ -48,6 +48,7 @@ def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
     failed_fuzzy_membership_fns = [lambda x: np.nan for _ in range(tree_.node_count)]
 
     def recurse(node, passed_fns, failed_fns, x):
+        x = x.reset_index(drop=True)
         if tree_.feature[node] != _tree.TREE_UNDEFINED:
             threshold = tree_.threshold[node]
             
