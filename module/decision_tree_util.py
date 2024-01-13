@@ -49,32 +49,78 @@ def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
     def recurse(node, passed_fns, failed_fns, x):
         if tree_.feature[node] != _tree.TREE_UNDEFINED:
             threshold = tree_.threshold[node]
-            
+            print(f"Node {node}: Threshold = {threshold}")
+
             passed_x = x[x[:, tree_.feature[node]] <= threshold]
             failed_x = x[x[:, tree_.feature[node]] > threshold]
+            print(f"Node {node}: Passed samples = {len(passed_x)}, Failed samples = {len(failed_x)}")
+
             if passed_x.shape[0] > 1:
                 mean = passed_x[:, tree_.feature[node]].mean()
                 params = {'theta': threshold, 'fuzzy_nearly_one': fuzzy_nearly_one, 
                           'anchor_point': mean}
                 passed_fns[node] = partial(sigmoid, **params)
-                
+                print(f"Node {node}: Passed fuzzy function defined with mean = {mean}")
+
                 mean = failed_x[:, tree_.feature[node]].mean()
                 params = {'theta': threshold, 'fuzzy_nearly_one': fuzzy_nearly_one, 
                           'anchor_point': mean}
                 failed_fns[node] = partial(sigmoid, **params)
+                print(f"Node {node}: Failed fuzzy function defined with mean = {mean}")
             else:
                 passed_fns[node] = lambda x:(x <= threshold).astype(float)
                 failed_fns[node] = lambda x:(x > threshold).astype(float)
-            
+                print(f"Node {node}: Passed and failed fuzzy functions set to default")
+
             passed_fns, failed_fns = recurse(tree_.children_left[node], passed_fns, failed_fns, passed_x)
             passed_fns, failed_fns = recurse(tree_.children_right[node], passed_fns, failed_fns, failed_x)
         else:
             passed_fns[node] = lambda x:x/x
             passed_fns[node] = lambda x:x/x
-            
+            print(f"Node {node}: Leaf node, passed and failed fuzzy functions set to identity")
+
         return passed_fns, failed_fns
 
     return recurse(0, passed_fuzzy_membership_fns, failed_fuzzy_membership_fns, x)
+
+
+
+
+
+# def cal_fuzzy_membership_fn(tree, x, fuzzy_nearly_one):
+#     tree_ = tree.tree_
+#     passed_fuzzy_membership_fns = [lambda x: np.nan for _ in range(tree_.node_count)]
+#     failed_fuzzy_membership_fns = [lambda x: np.nan for _ in range(tree_.node_count)]
+
+    # def recurse(node, passed_fns, failed_fns, x):
+    #     if tree_.feature[node] != _tree.TREE_UNDEFINED:
+    #         threshold = tree_.threshold[node]
+            
+    #         passed_x = x[x[:, tree_.feature[node]] <= threshold]
+    #         failed_x = x[x[:, tree_.feature[node]] > threshold]
+    #         if passed_x.shape[0] > 1:
+    #             mean = passed_x[:, tree_.feature[node]].mean()
+    #             params = {'theta': threshold, 'fuzzy_nearly_one': fuzzy_nearly_one, 
+    #                       'anchor_point': mean}
+    #             passed_fns[node] = partial(sigmoid, **params)
+                
+    #             mean = failed_x[:, tree_.feature[node]].mean()
+    #             params = {'theta': threshold, 'fuzzy_nearly_one': fuzzy_nearly_one, 
+    #                       'anchor_point': mean}
+    #             failed_fns[node] = partial(sigmoid, **params)
+    #         else:
+    #             passed_fns[node] = lambda x:(x <= threshold).astype(float)
+    #             failed_fns[node] = lambda x:(x > threshold).astype(float)
+            
+    #         passed_fns, failed_fns = recurse(tree_.children_left[node], passed_fns, failed_fns, passed_x)
+    #         passed_fns, failed_fns = recurse(tree_.children_right[node], passed_fns, failed_fns, failed_x)
+    #     else:
+    #         passed_fns[node] = lambda x:x/x
+    #         passed_fns[node] = lambda x:x/x
+            
+    #     return passed_fns, failed_fns
+
+    # return recurse(0, passed_fuzzy_membership_fns, failed_fuzzy_membership_fns, x)
 # -----------------------------------------------------------------------------------------------------
 
 # Calculates the conviction rate for each data point in the test dataset.
