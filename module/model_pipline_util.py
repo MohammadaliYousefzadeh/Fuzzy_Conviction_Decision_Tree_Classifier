@@ -260,16 +260,15 @@ def plot_lift_chart(y_pred, y_actual, mode, name, show_last_bin=False):
 
 # Plots the Receiver Operating Characteristic (ROC) curve,
 # which is a graphical representation of the diagnostic ability of a binary classifier.
-def show_roc_curve(y_test, y_score, ax=None):
+def show_roc_curve(y_test, fpr, tpr, ax=None):
     if ax is None:
         fig, ax = plt.subplots()
     # Compute micro-average ROC curve and ROC area
-    fpr, tpr, _ = roc_curve(y_test, y_score)
-    roc_auc     = auc(fpr, tpr)
+    roc_auc = auc(fpr, tpr)
 
     lw = 2
     ax.plot(fpr, tpr, color='darkorange',
-             lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+            lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
     ax.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
     ax.set_xlim([0.0, 1.0])
     ax.set_ylim([0.0, 1.05])
@@ -282,10 +281,38 @@ def show_roc_curve(y_test, y_score, ax=None):
     ax.spines['right'].set_visible(True)
     ax.spines['bottom'].set_linewidth(1.5)
     ax.spines['left'].set_linewidth(1.5)
-    
+
     ax.legend(loc="lower right")
     if ax is None:
         plt.show()
+
+
+# def show_roc_curve(y_test, y_score, ax=None):
+#     if ax is None:
+#         fig, ax = plt.subplots()
+#     # Compute micro-average ROC curve and ROC area
+#     fpr, tpr, _ = roc_curve(y_test, y_score)
+#     roc_auc     = auc(fpr, tpr)
+
+#     lw = 2
+#     ax.plot(fpr, tpr, color='darkorange',
+#              lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+#     ax.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+#     ax.set_xlim([0.0, 1.0])
+#     ax.set_ylim([0.0, 1.05])
+#     ax.set_xlabel('False Positive Rate')
+#     ax.set_ylabel('True Positive Rate')
+#     ax.set_title('ROC')
+
+#     # Highlight the axes lines
+#     ax.spines['top'].set_visible(True)
+#     ax.spines['right'].set_visible(True)
+#     ax.spines['bottom'].set_linewidth(1.5)
+#     ax.spines['left'].set_linewidth(1.5)
+    
+#     ax.legend(loc="lower right")
+#     if ax is None:
+#         plt.show()
 # ------------------------------------------------------------------------------------------------------------------
 
 # Calculates the ROC curve based on the data and specific criteria columns.
