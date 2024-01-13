@@ -90,8 +90,8 @@ def cal_conviction_rate(model, x_train, x_test, y_test, features, fuzzy_nearly_o
     df_temp['Target'] = y_test.values
 
     for i in range(model.tree_.node_count):
-        df_temp['fv_{}_{}'.format(i, 0)] = failed_fuzzy_membership_fns[i](x_test[:, model.tree_.feature[i]])
-        df_temp['fv_{}_{}'.format(i, 1)] = passed_fuzzy_membership_fns[i](x_test[:, model.tree_.feature[i]])
+        df_temp['fv_{}_{}'.format(i, 0)] = failed_fuzzy_membership_fns[i](x_test.iloc[:, model.tree_.feature[i]])
+        df_temp['fv_{}_{}'.format(i, 1)] = passed_fuzzy_membership_fns[i](x_test.iloc[:, model.tree_.feature[i]])
 
     for i, path in enumerate(traversed_path):
         df_temp['fm_{}'.format(i)] = 1
